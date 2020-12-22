@@ -1,0 +1,321 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SELECT * FROM university
+--------------
+
++--------------+--------------------------------+-----------+----------+----------+
+| universityID | officialName                   | city      | province | nickname |
++--------------+--------------------------------+-----------+----------+----------+
+|            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+|            4 | University of Waterloo         | Waterloo  | ON       | Waterloo |
+|           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+|           24 | Concordia University           | Montreal  | QB       | Concord  |
+|           55 | McMaster University            | Hamilton  | ON       | Mac      |
+|           66 | University of British Columbia | Vancouver | BC       | UBC      |
+|           77 | Wilfred Laurier University     | Waterloo  | ON       | Laurier  |
+|           88 | McGill University              | Montreal  | QB       | McGill   |
++--------------+--------------------------------+-----------+----------+----------+
+8 rows in set (0.01 sec)
+
+--------------
+LOAD DATA LOCAL INFILE 'loaddatafall2020.txt' 
+	INTO TABLE university
+	FIELDS TERMINATED BY ','
+	LINES TERMINATED BY '\n'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+Records: 7  Deleted: 0  Skipped: 7  Warnings: 0
+
+--------------
+SELECT * FROM university
+--------------
+
++--------------+--------------------------------+-----------+----------+----------+
+| universityID | officialName                   | city      | province | nickname |
++--------------+--------------------------------+-----------+----------+----------+
+|            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+|            4 | University of Waterloo         | Waterloo  | ON       | Waterloo |
+|           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+|           24 | Concordia University           | Montreal  | QB       | Concord  |
+|           55 | McMaster University            | Hamilton  | ON       | Mac      |
+|           66 | University of British Columbia | Vancouver | BC       | UBC      |
+|           77 | Wilfred Laurier University     | Waterloo  | ON       | Laurier  |
+|           88 | McGill University              | Montreal  | QB       | McGill   |
++--------------+--------------------------------+-----------+----------+----------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM uwo
+--------------
+
++-----------+---------------------------------------------+--------------+--------------+
+| courseNum | courseName                                  | courseWeight | courseSuffix |
++-----------+---------------------------------------------+--------------+--------------+
+| cs0020    | Intro to Coding using Pascal and Fortran    |          1.0 |              |
+| cs1026    | Computer Science Fundamentals I             |          0.5 | A/B          |
+| cs1027    | Computer Science Fundamentals II            |          0.5 | A/B          |
+| cs2120    | Modern Survival Skills I: Coding Essentials |          0.5 | A/B          |
+| cs2210    | Algorithms and Data Structures              |          1.0 | A/B          |
+| cs3319    | Databases I                                 |          0.5 | A/B          |
+| cs3337    | Front-End Web Development                   |          0.5 | A/B          |
+| cs4490    | Thesis                                      |          0.5 | Z            |
++-----------+---------------------------------------------+--------------+--------------+
+8 rows in set (0.00 sec)
+
+ERROR 1062 (23000) at line 11: Duplicate entry 'cs1026' for key 'PRIMARY'
+--------------
+INSERT INTO uwo (courseNum, courseName, courseWeight, courseSuffix) VALUES
+    ('cs1026', 'Computer Science Fundamentals I', 0.5, 'A/B'),
+    ('cs1027', 'Computer Science Fundamentals II', 0.5, 'A/B'),
+    ('cs2210', 'Algorithms and Data Structures', 1.0, 'A/B'),
+    ('cs3319', 'Databases I', 0.5, 'A/B'),
+    ('cs2120', 'Modern Survival Skills I: Coding Essentials', 0.5, 'A/B'),
+    ('cs4490', 'Thesis', 0.5, 'Z'),
+    ('cs0020', 'Intro to Coding using Pascal and Fortran', 1.0, ''),
+    ('cs3337', 'Front-End Web Development', 0.5, 'A/B')
+--------------
+
+--------------
+SELECT * FROM uwo
+--------------
+
++-----------+---------------------------------------------+--------------+--------------+
+| courseNum | courseName                                  | courseWeight | courseSuffix |
++-----------+---------------------------------------------+--------------+--------------+
+| cs0020    | Intro to Coding using Pascal and Fortran    |          1.0 |              |
+| cs1026    | Computer Science Fundamentals I             |          0.5 | A/B          |
+| cs1027    | Computer Science Fundamentals II            |          0.5 | A/B          |
+| cs2120    | Modern Survival Skills I: Coding Essentials |          0.5 | A/B          |
+| cs2210    | Algorithms and Data Structures              |          1.0 | A/B          |
+| cs3319    | Databases I                                 |          0.5 | A/B          |
+| cs3337    | Front-End Web Development                   |          0.5 | A/B          |
+| cs4490    | Thesis                                      |          0.5 | Z            |
++-----------+---------------------------------------------+--------------+--------------+
+8 rows in set (0.00 sec)
+
+ERROR 1062 (23000) at line 22: Duplicate entry '15' for key 'PRIMARY'
+--------------
+INSERT INTO university (universityID, officialName, nickname, city, province) VALUES
+    (15, "Hamilton University", "U of H", "Hamilton", "ON")
+--------------
+
+--------------
+SELECT * FROM course
+--------------
+
++------------+---------------------------------------+------------+--------------+--------------+
+| courseCode | courseName                            | courseYear | courseWeight | universityID |
++------------+---------------------------------------+------------+--------------+--------------+
+| CompSci011 | Intro to Computer Science             |          2 |          0.5 |            4 |
+| CompSci021 | Packages                              |          1 |          0.5 |            2 |
+| CompSci021 | Intro Programming                     |          1 |          1.0 |           66 |
+| CompSci022 | Introduction to Programming           |          1 |          0.5 |            2 |
+| CompSci022 | Advanced Programming                  |          1 |          0.5 |           66 |
+| CompSci022 | Using Packages                        |          1 |          0.5 |           77 |
+| CompSci023 | Advanced Programming                  |          1 |          0.5 |            2 |
+| CompSci033 | Intro to Programming for Med students |          3 |          0.5 |            2 |
+| CompSci101 | Introduction to Using Data Structures |          2 |          0.5 |           77 |
+| CompSci123 | Using UNIX                            |          2 |          0.5 |            4 |
+| CompSci222 | Introduction to Databases             |          2 |          1.0 |            2 |
+| CompSci319 | Using Databases                       |          3 |          0.5 |           66 |
+| CompSci333 | Graphics                              |          3 |          0.5 |           55 |
+| CompSci345 | Front-End Frameworks                  |          3 |          0.5 |           15 |
+| Compsci401 | Artificial Intelligence II            |          4 |          0.5 |           15 |
+| CompSci444 | Networks                              |          4 |          0.5 |           55 |
++------------+---------------------------------------+------------+--------------+--------------+
+16 rows in set (0.00 sec)
+
+ERROR 1062 (23000) at line 26: Duplicate entry 'CompSci022-2' for key 'PRIMARY'
+--------------
+INSERT INTO course (universityID, courseCode, courseName, courseYear, courseWeight) VALUES
+    (2, 'CompSci022','Introduction to Programming', 1, 0.5),
+    (2, 'CompSci033','Intro to Programming for Med students', 3, 0.5),
+    (2, 'CompSci021','Packages', 1, 0.5),
+    (2, 'CompSci222','Introduction to Databases', 2, 1.0),
+    (2, 'CompSci023','Advanced Programming', 1, 0.5),
+    (4, 'CompSci011','Intro to Computer Science', 2, 0.5),
+    (4, 'CompSci123','Using UNIX', 2, 0.5),
+    (66, 'CompSci021','Intro Programming', 1, 1.0),
+    (66, 'CompSci022','Advanced Programming', 1, 0.5),
+    (66, 'CompSci319','Using Databases', 3, 0.5),
+    (55, 'CompSci333','Graphics', 3, 0.5),
+    (55, 'CompSci444','Networks', 4, 0.5),
+    (77, 'CompSci022','Using Packages', 1, 0.5),
+    (77, 'CompSci101','Introduction to Using Data Structures', 2, 0.5),
+    (15, 'CompSci345','Front-End Frameworks', 3, 0.5),
+    (15, 'Compsci401','Artificial Intelligence II', 4, 0.5)
+--------------
+
+--------------
+SELECT * FROM course
+--------------
+
++------------+---------------------------------------+------------+--------------+--------------+
+| courseCode | courseName                            | courseYear | courseWeight | universityID |
++------------+---------------------------------------+------------+--------------+--------------+
+| CompSci011 | Intro to Computer Science             |          2 |          0.5 |            4 |
+| CompSci021 | Packages                              |          1 |          0.5 |            2 |
+| CompSci021 | Intro Programming                     |          1 |          1.0 |           66 |
+| CompSci022 | Introduction to Programming           |          1 |          0.5 |            2 |
+| CompSci022 | Advanced Programming                  |          1 |          0.5 |           66 |
+| CompSci022 | Using Packages                        |          1 |          0.5 |           77 |
+| CompSci023 | Advanced Programming                  |          1 |          0.5 |            2 |
+| CompSci033 | Intro to Programming for Med students |          3 |          0.5 |            2 |
+| CompSci101 | Introduction to Using Data Structures |          2 |          0.5 |           77 |
+| CompSci123 | Using UNIX                            |          2 |          0.5 |            4 |
+| CompSci222 | Introduction to Databases             |          2 |          1.0 |            2 |
+| CompSci319 | Using Databases                       |          3 |          0.5 |           66 |
+| CompSci333 | Graphics                              |          3 |          0.5 |           55 |
+| CompSci345 | Front-End Frameworks                  |          3 |          0.5 |           15 |
+| Compsci401 | Artificial Intelligence II            |          4 |          0.5 |           15 |
+| CompSci444 | Networks                              |          4 |          0.5 |           55 |
++------------+---------------------------------------+------------+--------------+--------------+
+16 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM equivalentCourses
+--------------
+
++-----------+-------------+-------------+--------------+--------------+
+| uwoCourse | otherCourse | dateEnacted | approvalName | universityID |
++-----------+-------------+-------------+--------------+--------------+
+| cs0020    | CompSci022  | 2018-09-19  | Dr. El-Sakka |            2 |
+| cs1026    | CompSci011  | 1997-02-09  | Dr. El-Sakka |            4 |
+| cs1026    | CompSci021  | 2010-01-12  | Dr. El-Sakka |           66 |
+| cs1026    | CompSci022  | 2015-05-12  | Dr. El-Sakka |            2 |
+| cs1026    | CompSci033  | 2013-01-02  | Dr. El-Sakka |            2 |
+| cs1027    | CompSci022  | 2019-09-01  | Dr. El-Sakka |           66 |
+| cs1027    | CompSci023  | 2017-06-22  | Dr. El-Sakka |            2 |
+| cs2120    | CompSci022  | 2018-12-10  | Dr. El-Sakka |            2 |
+| cs2210    | CompSci101  | 1998-07-12  | Dr. El-Sakka |           77 |
+| cs3319    | CompSci222  | 1990-09-13  | Dr. El-Sakka |            2 |
+| cs3319    | CompSci319  | 1987-09-21  | Dr. El-Sakka |           66 |
++-----------+-------------+-------------+--------------+--------------+
+11 rows in set (0.00 sec)
+
+ERROR 1062 (23000) at line 46: Duplicate entry 'cs1026-CompSci022-2' for key 'PRIMARY'
+--------------
+INSERT INTO equivalentCourses (universityID, uwoCourse, otherCourse, dateEnacted, approvalName) VALUES
+    (2, 'cs1026', 'CompSci022','2015-05-12', 'Dr. El-Sakka'),
+    (2, 'cs1026', 'CompSci033','2013-01-02', 'Dr. El-Sakka'),
+    (4, 'cs1026', 'CompSci011','1997-02-09', 'Dr. El-Sakka'),
+    (66, 'cs1026', 'CompSci021','2010-01-12', 'Dr. El-Sakka'),
+    (2, 'cs1027', 'CompSci023','2017-06-22', 'Dr. El-Sakka'),
+    (66, 'cs1027', 'CompSci022', '2019-09-01', 'Dr. El-Sakka'),
+    (77, 'cs2210', 'CompSci101', '1998-07-12', 'Dr. El-Sakka'),
+    (2, 'cs3319', 'CompSci222', '1990-09-13', 'Dr. El-Sakka'),
+    (66, 'cs3319', 'CompSci319', '1987-09-21', 'Dr. El-Sakka'),
+    (2, 'cs2120', 'CompSci022', '2018-12-10', 'Dr. El-Sakka'),
+    (2, 'cs0020', 'CompSci022', '1999-09-17', 'Dr. El-Sakka')
+--------------
+
+--------------
+SELECT * FROM equivalentCourses
+--------------
+
++-----------+-------------+-------------+--------------+--------------+
+| uwoCourse | otherCourse | dateEnacted | approvalName | universityID |
++-----------+-------------+-------------+--------------+--------------+
+| cs0020    | CompSci022  | 2018-09-19  | Dr. El-Sakka |            2 |
+| cs1026    | CompSci011  | 1997-02-09  | Dr. El-Sakka |            4 |
+| cs1026    | CompSci021  | 2010-01-12  | Dr. El-Sakka |           66 |
+| cs1026    | CompSci022  | 2015-05-12  | Dr. El-Sakka |            2 |
+| cs1026    | CompSci033  | 2013-01-02  | Dr. El-Sakka |            2 |
+| cs1027    | CompSci022  | 2019-09-01  | Dr. El-Sakka |           66 |
+| cs1027    | CompSci023  | 2017-06-22  | Dr. El-Sakka |            2 |
+| cs2120    | CompSci022  | 2018-12-10  | Dr. El-Sakka |            2 |
+| cs2210    | CompSci101  | 1998-07-12  | Dr. El-Sakka |           77 |
+| cs3319    | CompSci222  | 1990-09-13  | Dr. El-Sakka |            2 |
+| cs3319    | CompSci319  | 1987-09-21  | Dr. El-Sakka |           66 |
++-----------+-------------+-------------+--------------+--------------+
+11 rows in set (0.00 sec)
+
+--------------
+UPDATE equivalentCourses SET dateEnacted = '2018-09-19' WHERE uwoCourse = "cs0020"
+--------------
+
+Query OK, 0 rows affected (0.03 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+--------------
+SELECT * FROM equivalentCourses
+--------------
+
++-----------+-------------+-------------+--------------+--------------+
+| uwoCourse | otherCourse | dateEnacted | approvalName | universityID |
++-----------+-------------+-------------+--------------+--------------+
+| cs0020    | CompSci022  | 2018-09-19  | Dr. El-Sakka |            2 |
+| cs1026    | CompSci011  | 1997-02-09  | Dr. El-Sakka |            4 |
+| cs1026    | CompSci021  | 2010-01-12  | Dr. El-Sakka |           66 |
+| cs1026    | CompSci022  | 2015-05-12  | Dr. El-Sakka |            2 |
+| cs1026    | CompSci033  | 2013-01-02  | Dr. El-Sakka |            2 |
+| cs1027    | CompSci022  | 2019-09-01  | Dr. El-Sakka |           66 |
+| cs1027    | CompSci023  | 2017-06-22  | Dr. El-Sakka |            2 |
+| cs2120    | CompSci022  | 2018-12-10  | Dr. El-Sakka |            2 |
+| cs2210    | CompSci101  | 1998-07-12  | Dr. El-Sakka |           77 |
+| cs3319    | CompSci222  | 1990-09-13  | Dr. El-Sakka |            2 |
+| cs3319    | CompSci319  | 1987-09-21  | Dr. El-Sakka |           66 |
++-----------+-------------+-------------+--------------+--------------+
+11 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM course
+--------------
+
++------------+---------------------------------------+------------+--------------+--------------+
+| courseCode | courseName                            | courseYear | courseWeight | universityID |
++------------+---------------------------------------+------------+--------------+--------------+
+| CompSci011 | Intro to Computer Science             |          2 |          0.5 |            4 |
+| CompSci021 | Packages                              |          1 |          0.5 |            2 |
+| CompSci021 | Intro Programming                     |          1 |          1.0 |           66 |
+| CompSci022 | Introduction to Programming           |          1 |          0.5 |            2 |
+| CompSci022 | Advanced Programming                  |          1 |          0.5 |           66 |
+| CompSci022 | Using Packages                        |          1 |          0.5 |           77 |
+| CompSci023 | Advanced Programming                  |          1 |          0.5 |            2 |
+| CompSci033 | Intro to Programming for Med students |          3 |          0.5 |            2 |
+| CompSci101 | Introduction to Using Data Structures |          2 |          0.5 |           77 |
+| CompSci123 | Using UNIX                            |          2 |          0.5 |            4 |
+| CompSci222 | Introduction to Databases             |          2 |          1.0 |            2 |
+| CompSci319 | Using Databases                       |          3 |          0.5 |           66 |
+| CompSci333 | Graphics                              |          3 |          0.5 |           55 |
+| CompSci345 | Front-End Frameworks                  |          3 |          0.5 |           15 |
+| Compsci401 | Artificial Intelligence II            |          4 |          0.5 |           15 |
+| CompSci444 | Networks                              |          4 |          0.5 |           55 |
++------------+---------------------------------------+------------+--------------+--------------+
+16 rows in set (0.00 sec)
+
+--------------
+UPDATE course SET courseYear = 1 WHERE courseName LIKE 'Intro%'
+--------------
+
+Query OK, 4 rows affected (0.01 sec)
+Rows matched: 6  Changed: 4  Warnings: 0
+
+--------------
+SELECT * FROM course
+--------------
+
++------------+---------------------------------------+------------+--------------+--------------+
+| courseCode | courseName                            | courseYear | courseWeight | universityID |
++------------+---------------------------------------+------------+--------------+--------------+
+| CompSci011 | Intro to Computer Science             |          1 |          0.5 |            4 |
+| CompSci021 | Packages                              |          1 |          0.5 |            2 |
+| CompSci021 | Intro Programming                     |          1 |          1.0 |           66 |
+| CompSci022 | Introduction to Programming           |          1 |          0.5 |            2 |
+| CompSci022 | Advanced Programming                  |          1 |          0.5 |           66 |
+| CompSci022 | Using Packages                        |          1 |          0.5 |           77 |
+| CompSci023 | Advanced Programming                  |          1 |          0.5 |            2 |
+| CompSci033 | Intro to Programming for Med students |          1 |          0.5 |            2 |
+| CompSci101 | Introduction to Using Data Structures |          1 |          0.5 |           77 |
+| CompSci123 | Using UNIX                            |          2 |          0.5 |            4 |
+| CompSci222 | Introduction to Databases             |          1 |          1.0 |            2 |
+| CompSci319 | Using Databases                       |          3 |          0.5 |           66 |
+| CompSci333 | Graphics                              |          3 |          0.5 |           55 |
+| CompSci345 | Front-End Frameworks                  |          3 |          0.5 |           15 |
+| Compsci401 | Artificial Intelligence II            |          4 |          0.5 |           15 |
+| CompSci444 | Networks                              |          4 |          0.5 |           55 |
++------------+---------------------------------------+------------+--------------+--------------+
+16 rows in set (0.00 sec)
+
+Bye

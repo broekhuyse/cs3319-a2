@@ -1,0 +1,228 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SELECT courseName FROM uwo
+--------------
+
++---------------------------------------------+
+| courseName                                  |
++---------------------------------------------+
+| Intro to Coding using Pascal and Fortran    |
+| Computer Science Fundamentals I             |
+| Computer Science Fundamentals II            |
+| Modern Survival Skills I: Coding Essentials |
+| Algorithms and Data Structures              |
+| Databases I                                 |
+| Front-End Web Development                   |
+| Thesis                                      |
++---------------------------------------------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT DISTINCT courseCode FROM course
+--------------
+
++------------+
+| courseCode |
++------------+
+| CompSci021 |
+| CompSci022 |
+| CompSci023 |
+| CompSci033 |
+| CompSci222 |
+| CompSci319 |
+| CompSci333 |
+| CompSci345 |
+| Compsci401 |
+| CompSci444 |
++------------+
+10 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM uwo ORDER BY courseName ASC
+--------------
+
++-----------+---------------------------------------------+--------------+--------------+
+| courseNum | courseName                                  | courseWeight | courseSuffix |
++-----------+---------------------------------------------+--------------+--------------+
+| cs2210    | Algorithms and Data Structures              |          1.0 | A/B          |
+| cs1026    | Computer Science Fundamentals I             |          0.5 | A/B          |
+| cs1027    | Computer Science Fundamentals II            |          0.5 | A/B          |
+| cs3319    | Databases I                                 |          0.5 | A/B          |
+| cs3337    | Front-End Web Development                   |          0.5 | A/B          |
+| cs0020    | Intro to Coding using Pascal and Fortran    |          1.0 |              |
+| cs2120    | Modern Survival Skills I: Coding Essentials |          0.5 | A/B          |
+| cs4490    | Thesis                                      |          0.5 | Z            |
++-----------+---------------------------------------------+--------------+--------------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT courseNum, courseName FROM uwo WHERE courseWeight = 0.5
+--------------
+
++-----------+---------------------------------------------+
+| courseNum | courseName                                  |
++-----------+---------------------------------------------+
+| cs1026    | Computer Science Fundamentals I             |
+| cs1027    | Computer Science Fundamentals II            |
+| cs2120    | Modern Survival Skills I: Coding Essentials |
+| cs3319    | Databases I                                 |
+| cs3337    | Front-End Web Development                   |
+| cs4490    | Thesis                                      |
++-----------+---------------------------------------------+
+6 rows in set (0.00 sec)
+
+--------------
+SELECT courseCode, courseName FROM course
+    WHERE universityID in (
+        SELECT universityID FROM university
+        WHERE officialName = 'University Of Toronto'
+    )
+--------------
+
++------------+---------------------------------------+
+| courseCode | courseName                            |
++------------+---------------------------------------+
+| CompSci021 | Packages                              |
+| CompSci022 | Introduction to Programming           |
+| CompSci023 | Advanced Programming                  |
+| CompSci033 | Intro to Programming for Med students |
+| CompSci222 | Introduction to Databases             |
++------------+---------------------------------------+
+5 rows in set (0.00 sec)
+
+--------------
+SELECT course.courseName, university.nickname FROM course
+    INNER JOIN university ON course.universityID = university.universityID
+    WHERE course.courseName LIKE '%Introduction%'
+--------------
+
++-----------------------------+----------+
+| courseName                  | nickname |
++-----------------------------+----------+
+| Introduction to Programming | UofT     |
+| Introduction to Databases   | UofT     |
++-----------------------------+----------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT equivalentCourses.otherCourse, university.officialName, equivalentCourses.uwoCourse, equivalentCourses.dateEnacted FROM equivalentCourses
+    INNER JOIN university ON university.universityID = equivalentCourses.universityID
+    WHERE equivalentCourses.dateEnacted <= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)
+    ORDER BY equivalentCourses.dateEnacted ASC
+--------------
+
++-------------+--------------------------------+-----------+-------------+
+| otherCourse | officialName                   | uwoCourse | dateEnacted |
++-------------+--------------------------------+-----------+-------------+
+| CompSci319  | University of British Columbia | cs3319    | 1987-09-21  |
+| CompSci222  | University Of Toronto          | cs3319    | 1990-09-13  |
+| CompSci021  | University of British Columbia | cs1026    | 2010-01-12  |
+| CompSci033  | University Of Toronto          | cs1026    | 2013-01-02  |
++-------------+--------------------------------+-----------+-------------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT equivalentCourses.otherCourse, university.nickname FROM equivalentCourses
+    INNER JOIN university ON equivalentCourses.universityID = university.universityID
+    WHERE equivalentCourses.uwoCourse = 'cs1026'
+--------------
+
++-------------+----------+
+| otherCourse | nickname |
++-------------+----------+
+| CompSci021  | UBC      |
+| CompSci033  | UofT     |
++-------------+----------+
+2 rows in set (0.01 sec)
+
+--------------
+SELECT COUNT(uwoCourse) FROM equivalentCourses WHERE uwoCourse = 'cs1026'
+--------------
+
++------------------+
+| COUNT(uwoCourse) |
++------------------+
+|                2 |
++------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT uwo.courseName, course.courseName, university.nickname FROM uwo
+    INNER JOIN equivalentCourses ON equivalentCourses.uwoCourse = uwo.courseNum
+    INNER JOIN course ON equivalentCourses.otherCourse = course.courseCode
+    INNER JOIN university ON university.universityID = equivalentCourses.universityID
+    WHERE university.city = 'Waterloo'
+    AND university.province = 'ON'
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+SELECT officialName FROM university WHERE universityID NOT IN
+    (SELECT universityID from equivalentCourses)
+--------------
+
++----------------------------+
+| officialName               |
++----------------------------+
+| University of Waterloo     |
+| Hamilton University        |
+| McMaster University        |
+| Wilfred Laurier University |
+| McGill University          |
++----------------------------+
+5 rows in set (0.00 sec)
+
+--------------
+SELECT uwo.courseName, uwo.courseNum FROM uwo
+    INNER JOIN equivalentCourses ON uwo.courseNum = equivalentCourses.uwoCourse
+    INNER JOIN course ON equivalentCourses.otherCourse = course.courseCode
+    WHERE course.courseYear = 3 OR course.courseYear = 4
+--------------
+
++-------------+-----------+
+| courseName  | courseNum |
++-------------+-----------+
+| Databases I | cs3319    |
++-------------+-----------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT uwo.courseName FROM uwo
+    INNER JOIN equivalentCourses ON uwo.courseNum = equivalentCourses.uwoCourse
+    GROUP BY equivalentCourses.uwoCourse
+    HAVING COUNT(equivalentCourses.uwoCourse) > 1
+--------------
+
++---------------------------------+
+| courseName                      |
++---------------------------------+
+| Computer Science Fundamentals I |
+| Databases I                     |
++---------------------------------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT uwo.courseNum AS WesternCourseNumber,
+    uwo.courseName AS WesternCourseName,
+    uwo.courseWeight AS CourseWeight,
+    course.courseName AS OtherUniversityCourseName,
+    course.courseWeight AS OtherCourseWeight,
+    university.officialName AS UniversityName FROM uwo, course, university
+    WHERE EXISTS (SELECT * FROM equivalentCourses
+    WHERE equivalentCourses.uwoCourse = uwo.courseNum
+    AND course.universityID = university.universityID
+    AND course.courseCode = equivalentCourses.otherCourse
+    AND course.universityID = equivalentCourses.universityID
+    AND course.courseWeight <> uwo.courseWeight)
+--------------
+
++---------------------+---------------------------------+--------------+---------------------------+-------------------+--------------------------------+
+| WesternCourseNumber | WesternCourseName               | CourseWeight | OtherUniversityCourseName | OtherCourseWeight | UniversityName                 |
++---------------------+---------------------------------+--------------+---------------------------+-------------------+--------------------------------+
+| cs1026              | Computer Science Fundamentals I |          0.5 | Intro Programming         |               1.0 | University of British Columbia |
+| cs3319              | Databases I                     |          0.5 | Introduction to Databases |               1.0 | University Of Toronto          |
++---------------------+---------------------------------+--------------+---------------------------+-------------------+--------------------------------+
+2 rows in set (0.00 sec)
+
+Bye

@@ -1,0 +1,142 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SHOW DATABASES
+--------------
+
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| abroekhuassign2db  |
+| flippedthree       |
+| mysql              |
+| performance_schema |
+| vetoffice          |
++--------------------+
+6 rows in set (0.00 sec)
+
+--------------
+DROP DATABASE abroekhuassign2db
+--------------
+
+Query OK, 4 rows affected (0.10 sec)
+
+--------------
+CREATE DATABASE abroekhuassign2db
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+GRANT USAGE ON *.* TO 'ta'@'localhost'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+DROP USER 'ta'@'localhost'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+GRANT ALL PRIVILEGES ON abroekhuassign2db.* TO 'ta'@'localhost'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+FLUSH PRIVILEGES
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SHOW TABLES
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+CREATE TABLE uwo (
+    courseNum VARCHAR(6) NOT NULL,
+    courseName VARCHAR(50) NOT NULL,
+    courseWeight DECIMAL(1,1) NOT NULL,
+    courseSuffix CHAR(1),
+    PRIMARY KEY (courseNum)
+)
+--------------
+
+Query OK, 0 rows affected (0.12 sec)
+
+--------------
+CREATE TABLE university (
+    universityID INT(2) NOT NULL,
+    officialName VARCHAR(50) NOT NULL,
+    nickname VARCHAR(50) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    province CHAR(2) NOT NULL,
+    PRIMARY KEY (universityID)
+)
+--------------
+
+Query OK, 0 rows affected (0.04 sec)
+
+--------------
+CREATE TABLE course (
+    courseCode VARCHAR(10) NOT NULL,
+    courseName VARCHAR(50) NOT NULL,
+    courseYear INT NOT NULL,
+    courseWeight DECIMAL(1,1) NOT NULL,
+    universityID INT(2) NOT NULL,
+    PRIMARY KEY (courseCode, universityID),
+    FOREIGN KEY (universityID)
+        REFERENCES university(universityID)
+        ON DELETE RESTRICT
+)
+--------------
+
+Query OK, 0 rows affected (0.09 sec)
+
+--------------
+CREATE TABLE equivalentCourses (
+    uwoCourse VARCHAR(6) NOT NULL,
+    otherCourse VARCHAR(10) NOT NULL,
+    dateEnacted DATE NOT NULL,
+    approvalName VARCHAR(30) NOT NULL,
+    universityID INT(2) NOT NULL,
+    PRIMARY KEY (uwoCourse, otherCourse, universityID),
+    FOREIGN KEY (uwoCourse)
+        REFERENCES uwo(courseNum)
+        ON DELETE CASCADE,
+    FOREIGN KEY (otherCourse)
+        REFERENCES course(courseCode)
+        ON DELETE CASCADE,
+    FOREIGN KEY (universityID)
+        REFERENCES course(universityID)
+)
+--------------
+
+Query OK, 0 rows affected (0.08 sec)
+
+--------------
+SHOW TABLES
+--------------
+
++-----------------------------+
+| Tables_in_abroekhuassign2db |
++-----------------------------+
+| course                      |
+| equivalentCourses           |
+| university                  |
+| uwo                         |
++-----------------------------+
+4 rows in set (0.00 sec)
+
+Bye

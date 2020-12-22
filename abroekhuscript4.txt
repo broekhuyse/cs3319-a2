@@ -1,0 +1,147 @@
+Warning: Using a password on the command line interface can be insecure.
+ERROR 1050 (42S01) at line 4: Table 'assignment4' already exists
+--------------
+CREATE VIEW assignment4 AS
+SELECT course.courseName AS OutsideCourse, officialName, nickname, city, uwo.courseName AS UWOCourse FROM course, university, uwo
+WHERE EXISTS (SELECT * FROM equivalentCourses
+WHERE uwo.courseNum = equivalentCourses.uwoCourse
+AND course.courseName = equivalentCourses.otherCourse
+AND university.universityID = equivalentCourses.universityID
+AND university.universityID = course.universityID
+AND course.courseYear = 1)
+--------------
+
+--------------
+SELECT * FROM assignment4
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+SELECT * FROM assignment4 WHERE nickname='UofT' ORDER BY uwoCourse
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+SELECT * FROM university
+--------------
+
++--------------+--------------------------------+-----------+----------+----------+
+| universityID | officialName                   | city      | province | nickname |
++--------------+--------------------------------+-----------+----------+----------+
+|            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+|            4 | University of Waterloo         | Waterloo  | ON       | Waterloo |
+|           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+|           55 | McMaster University            | Hamilton  | ON       | Mac      |
+|           66 | University of British Columbia | Vancouver | BC       | UBC      |
+|           77 | Wilfred Laurier University     | Waterloo  | ON       | Laurier  |
+|           88 | McGill University              | Montreal  | QB       | McGill   |
++--------------+--------------------------------+-----------+----------+----------+
+7 rows in set (0.00 sec)
+
+--------------
+DELETE FROM university WHERE nickname LIKE '%cord%'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT * FROM university
+--------------
+
++--------------+--------------------------------+-----------+----------+----------+
+| universityID | officialName                   | city      | province | nickname |
++--------------+--------------------------------+-----------+----------+----------+
+|            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+|            4 | University of Waterloo         | Waterloo  | ON       | Waterloo |
+|           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+|           55 | McMaster University            | Hamilton  | ON       | Mac      |
+|           66 | University of British Columbia | Vancouver | BC       | UBC      |
+|           77 | Wilfred Laurier University     | Waterloo  | ON       | Laurier  |
+|           88 | McGill University              | Montreal  | QB       | McGill   |
++--------------+--------------------------------+-----------+----------+----------+
+7 rows in set (0.00 sec)
+
+ERROR 1451 (23000) at line 29: Cannot delete or update a parent row: a foreign key constraint fails (`abroekhuassign2db`.`course`, CONSTRAINT `course_ibfk_1` FOREIGN KEY (`universityID`) REFERENCES `university` (`universityID`))
+--------------
+DELETE FROM university WHERE province = 'ON'
+--------------
+
+--------------
+SELECT * FROM university
+--------------
+
++--------------+--------------------------------+-----------+----------+----------+
+| universityID | officialName                   | city      | province | nickname |
++--------------+--------------------------------+-----------+----------+----------+
+|            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+|            4 | University of Waterloo         | Waterloo  | ON       | Waterloo |
+|           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+|           55 | McMaster University            | Hamilton  | ON       | Mac      |
+|           66 | University of British Columbia | Vancouver | BC       | UBC      |
+|           77 | Wilfred Laurier University     | Waterloo  | ON       | Laurier  |
+|           88 | McGill University              | Montreal  | QB       | McGill   |
++--------------+--------------------------------+-----------+----------+----------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM course, university 
+    WHERE course.universityID = university.universityID
+--------------
+
++------------+---------------------------------------+------------+--------------+--------------+--------------+--------------------------------+-----------+----------+----------+
+| courseCode | courseName                            | courseYear | courseWeight | universityID | universityID | officialName                   | city      | province | nickname |
++------------+---------------------------------------+------------+--------------+--------------+--------------+--------------------------------+-----------+----------+----------+
+| CompSci021 | Packages                              |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci022 | Introduction to Programming           |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci023 | Advanced Programming                  |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci033 | Intro to Programming for Med students |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci222 | Introduction to Databases             |          1 |          1.0 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci345 | Front-End Frameworks                  |          3 |          0.5 |           15 |           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+| Compsci401 | Artificial Intelligence II            |          4 |          0.5 |           15 |           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+| CompSci333 | Graphics                              |          3 |          0.5 |           55 |           55 | McMaster University            | Hamilton  | ON       | Mac      |
+| CompSci444 | Networks                              |          4 |          0.5 |           55 |           55 | McMaster University            | Hamilton  | ON       | Mac      |
+| CompSci021 | Intro Programming                     |          1 |          1.0 |           66 |           66 | University of British Columbia | Vancouver | BC       | UBC      |
+| CompSci022 | Advanced Programming                  |          1 |          0.5 |           66 |           66 | University of British Columbia | Vancouver | BC       | UBC      |
+| CompSci319 | Using Databases                       |          3 |          0.5 |           66 |           66 | University of British Columbia | Vancouver | BC       | UBC      |
++------------+---------------------------------------+------------+--------------+--------------+--------------+--------------------------------+-----------+----------+----------+
+12 rows in set (0.00 sec)
+
+--------------
+DELETE FROM course WHERE EXISTS (
+    SELECT * FROM university
+    WHERE course.universityID = university.universityID
+    AND university.city = 'Waterloo')
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT * FROM course, university WHERE course.universityID = university.universityID
+--------------
+
++------------+---------------------------------------+------------+--------------+--------------+--------------+--------------------------------+-----------+----------+----------+
+| courseCode | courseName                            | courseYear | courseWeight | universityID | universityID | officialName                   | city      | province | nickname |
++------------+---------------------------------------+------------+--------------+--------------+--------------+--------------------------------+-----------+----------+----------+
+| CompSci021 | Packages                              |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci022 | Introduction to Programming           |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci023 | Advanced Programming                  |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci033 | Intro to Programming for Med students |          1 |          0.5 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci222 | Introduction to Databases             |          1 |          1.0 |            2 |            2 | University Of Toronto          | Toronto   | ON       | UofT     |
+| CompSci345 | Front-End Frameworks                  |          3 |          0.5 |           15 |           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+| Compsci401 | Artificial Intelligence II            |          4 |          0.5 |           15 |           15 | Hamilton University            | Hamilton  | ON       | U of H   |
+| CompSci333 | Graphics                              |          3 |          0.5 |           55 |           55 | McMaster University            | Hamilton  | ON       | Mac      |
+| CompSci444 | Networks                              |          4 |          0.5 |           55 |           55 | McMaster University            | Hamilton  | ON       | Mac      |
+| CompSci021 | Intro Programming                     |          1 |          1.0 |           66 |           66 | University of British Columbia | Vancouver | BC       | UBC      |
+| CompSci022 | Advanced Programming                  |          1 |          0.5 |           66 |           66 | University of British Columbia | Vancouver | BC       | UBC      |
+| CompSci319 | Using Databases                       |          3 |          0.5 |           66 |           66 | University of British Columbia | Vancouver | BC       | UBC      |
++------------+---------------------------------------+------------+--------------+--------------+--------------+--------------------------------+-----------+----------+----------+
+12 rows in set (0.00 sec)
+
+ERROR 1146 (42S02) at line 46: Table 'abroekhuassign2db.asssignment4' doesn't exist
+--------------
+SELECT * FROM asssignment4
+--------------
+
+Bye
